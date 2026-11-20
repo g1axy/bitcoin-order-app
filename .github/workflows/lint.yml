@@ -1,0 +1,25 @@
+name: linting-tool-scan
+on:
+  push:
+    branches: [githubcicd]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+
+      - name: Run JSHint
+        run: bash scripts/jshint-script.sh
+
+      - name: Upload lint report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: linting-tool-report
+          path: JSHint-report
+          if-no-files-found: error
